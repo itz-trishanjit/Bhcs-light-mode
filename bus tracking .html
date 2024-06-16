@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Bus Tracking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #map-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 90%;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #map-container h1 {
+            margin: 0;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+        }
+
+        #map {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="map-container">
+        <h1>School Bus Live Tracking</h1>
+        <div id="map"></div>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map and set its view to the specific location and zoom level
+        var map = L.map('map').setView([28.7041, 77.1025], 13); // Coordinates from the provided link
+
+        // Add a tile layer to add to our map, in this case it's a Mapbox Streets tile layer.
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Placeholder for the bus marker
+        var busMarker = L.marker([28.7041, 77.1025]).addTo(map);
+
+        // Function to update the bus location
+        function updateBusLocation() {
+            // Fetch the bus location from the backend
+            fetch('https://maps.app.goo.gl/c5wAPXJQfgUokw4x7')
+                .then(response => response.json())
+                .then(data => {
+                    // Update bus marker position
+                    var newLatLng = new L.LatLng(data.latitude, data.longitude);
+                    busMarker.setLatLng(newLatLng);
+                    map.setView(newLatLng, 13);
+                })
+                .catch(error => console.error('Error fetching bus location:', error));
+        }
+
+        // Update the bus location every 5 seconds
+        setInterval(updateBusLocation, 5000);
+
+        // Call the update function immediately to load the initial location
+        updateBusLocation();
+    </script>
+</body>
+</html>

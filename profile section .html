@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            width: 300px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .profile-header {
+            margin-bottom: 20px;
+        }
+
+        #profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .profile-details p {
+            margin: 5px 0;
+        }
+
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        form input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <img id="profile-pic" src="default-profile.png" alt="Profile Picture">
+            <h1 id="profile-name">John Doe</h1>
+            <button onclick="editProfile()">Edit Profile</button>
+        </div>
+        <div class="profile-details">
+            <p><strong>Class:</strong> <span id="class">10th Grade</span></p>
+            <p><strong>School House:</strong> <span id="school-house">Red House</span></p>
+            <p><strong>Section:</strong> <span id="section">A</span></p>
+            <p><strong>Roll:</strong> <span id="roll">23</span></p>
+            <p><strong>Address:</strong> <span id="address">123 Main St, Springfield</span></p>
+            <p><strong>Father's Name:</strong> <span id="father-name">Mr. John Doe Sr.</span></p>
+            <p><strong>Mother's Name:</strong> <span id="mother-name">Mrs. Jane Doe</span></p>
+            <p><strong>Email:</strong> <span id="email">john.doe@example.com</span></p>
+            <p><strong>Mobile Number:</strong> <span id="mobile-number">123-456-7890</span></p>
+            <p><strong>Date of Birth:</strong> <span id="dob">01/01/2000</span></p>
+        </div>
+    </div>
+
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="edit-profile-form">
+                <label for="profile-pic-input">Profile Picture:</label>
+                <input type="file" id="profile-pic-input" accept="image/*" onchange="loadFile(event)">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="John Doe">
+                <label for="class">Class:</label>
+                <input type="text" id="class-input" name="class" value="10th Grade">
+                <label for="school-house">School House:</label>
+                <input type="text" id="school-house-input" name="school-house" value="Red House">
+                <label for="section">Section:</label>
+                <input type="text" id="section-input" name="section" value="A">
+                <label for="roll">Roll:</label>
+                <input type="text" id="roll-input" name="roll" value="23">
+                <label for="address">Address:</label>
+                <input type="text" id="address-input" name="address" value="123 Main St, Springfield">
+                <label for="father-name">Father's Name:</label>
+                <input type="text" id="father-name-input" name="father-name" value="Mr. John Doe Sr.">
+                <label for="mother-name">Mother's Name:</label>
+                <input type="text" id="mother-name-input" name="mother-name" value="Mrs. Jane Doe">
+                <label for="email">Email:</label>
+                <input type="email" id="email-input" name="email" value="john.doe@example.com">
+                <label for="mobile-number">Mobile Number:</label>
+                <input type="text" id="mobile-number-input" name="mobile-number" value="123-456-7890">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob-input" name="dob" value="2000-01-01">
+                <button type="button" onclick="saveProfile()">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+  let notices = JSON.parse(localStorage.getItem('notices')) || [];
+
+        function editProfile() {
+            document.getElementById('edit-profile-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('edit-profile-modal').style.display = 'none';
+        }
+
+        function loadFile(event) {
+            const output = document.getElementById('profile-pic');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src); // free memory
+            }
+        }
+
+        function saveProfile() {
+            var name = document.getElementById('name').value;
+            var className = document.getElementById('class-input').value;
+            var schoolHouse = document.getElementById('school-house-input').value;
+            var section = document.getElementById('section-input').value;
+            var roll = document.getElementById('roll-input').value;
+            var address = document.getElementById('address-input').value;
+            var fatherName = document.getElementById('father-name-input').value;
+            var motherName = document.getElementById('mother-name-input').value;
+            var email = document.getElementById('email-input').value;
+            var mobileNumber = document.getElementById('mobile-number-input').value;
+            var dob = document.getElementById('dob-input').value;
+
+            document.getElementById('profile-name').innerText = name;
+            document.getElementById('class').innerText = className;
+            document.getElementById('school-house').innerText = schoolHouse;
+            document.getElementById('section').innerText = section;
+            document.getElementById('roll').innerText = roll;
+            document.getElementById('address').innerText = address;
+            document.getElementById('father-name').innerText = fatherName;
+            document.getElementById('mother-name').innerText = motherName;
+            document.getElementById('email').innerText = email;
+            document.getElementById('mobile-number').innerText = mobileNumber;
+            document.getElementById('dob').innerText = new Date(dob).toLocaleDateString();
+
+            closeModal();
+          
+          
+        }
+  
+    </script>
+</body>
+</html>

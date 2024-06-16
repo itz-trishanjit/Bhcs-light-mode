@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select,
+        input[type="file"],
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        #homeworkList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .homeworkItem {
+            margin-bottom: 10px;
+        }
+
+        .homeworkItem a {
+            text-decoration: none;
+            color: inherit;
+            font-size: 16px;
+        }
+
+        .homeworkItem a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Homework</h1>
+        <div class="form-group">
+            <label for="regNo">Registration Number:</label>
+            <input type="text" id="regNo" placeholder="Enter registration number" required>
+        </div>
+        <div class="form-group">
+            <label for="class">Class:</label>
+            <select name="class" id="class">
+                <option value="Class_1">Class 1</option>
+                <option value="Class_2">Class 2</option>
+                <option value="Class_3">Class 3</option>
+                <option value="Class_4">Class 4</option>
+                <option value="Class_5">Class 5</option>
+                <option value="Class_6">Class 6</option>
+                <option value="Class_7">Class 7</option>
+                <option value="Class_8">Class 8</option>
+                <option value="Class_9">Class 9</option>
+                <option value="Class_10">Class 10</option>
+                <option value="Class_11">Class 11</option>
+                <option value="Class_12">Class 12</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" placeholder="Enter the subject">
+        </div>
+        <div class="form-group">
+            <label for="file">Select File:</label>
+            <input type="file" name="file" id="file" accept="image/*">
+        </div>
+        <div class="form-group">
+            <label for="validity">Homework Validity (Days):</label>
+            <input type="number" id="validity" min="1" required>
+        </div>
+        <button onclick="uploadHomework()">Upload</button>
+        <div id="status"></div>
+    </div>
+    <div class="container">
+        <h1>Download Homework</h1>
+        <div class="form-group">
+            <label for="downloadClass">Select Class:</label>
+            <select name="downloadClass" id="downloadClass">
+                <option value="Class_1">Class 1</option>
+                <option value="Class_2">Class 2</option>
+                <option value="Class_3">Class 3</option>
+                <option value="Class_4">Class 4</option>
+                <option value="Class_5">Class 5</option>
+                <option value="Class_6">Class 6</option>
+                <option value="Class_7">Class 7</option>
+                <option value="Class_8">Class 8</option>
+                <option value="Class_9">Class 9</option>
+                <option value="Class_10">Class 10</option>
+                <option value="Class_11">Class 11</option>
+                <option value="Class_12">Class 12</option>
+            </select>
+        </div>
+        <button onclick="showHomework()">Show Homework</button>
+        <ul id="homeworkList"></ul>
+    </div>
+    <script>
+        const validRegNo = "123456"; // Example registration number for validation
+
+        function uploadHomework() {
+            const regNo = document.getElementById('regNo').value;
+            const classSelected = document.getElementById('class').value;
+            const subject = document.getElementById('subject').value;
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const validity = document.getElementById('validity').value;
+            const statusDiv = document.getElementById('status');
+
+            if (regNo !== validRegNo) {
+                statusDiv.textContent = 'Invalid registration number!';
+                statusDiv.style.color = 'red';
+                return;
+            }
+
+            if (!classSelected || !subject || !file || !validity) {
+                statusDiv.textContent = 'All fields are required!';
+                statusDiv.style.color = 'red';
+                return;
+            }
+
+            const fileReader = new FileReader();
+            fileReader.onload = function (e) {
+                const homeworkData = {
+                    class: classSelected,
+                    subject: subject,
+                    filename: file.name,
+                    data: e.target.result,
+                    expiration: Date.now() + validity * 24 * 60 * 60 * 1000 // validity in days
+                };
+                const key = 'homework_' + classSelected;
+                const homeworkList = JSON.parse(localStorage.getItem(key) || '[]');
+                homeworkList.push(homeworkData);
+                localStorage.setItem(key, JSON.stringify(homeworkList));
+                statusDiv.textContent = 'Homework uploaded successfully!';
+                statusDiv.style.color = 'green';
+                fileInput.value = '';
+            };
+            fileReader.readAsDataURL(file);
+        }
+
+        function showHomework() {
+            const classSelected = document.getElementById('downloadClass').value;
+            const homeworkList = JSON.parse(localStorage.getItem('homework_' + classSelected) || '[]');
+            const now = Date.now();
+            const validHomeworkList = homeworkList.filter(item => item.expiration > now);
+            let homeworkListHtml = '';
+
+            if (validHomeworkList.length > 0) {
+                validHomeworkList.forEach(item => {
+                    homeworkListHtml += `
+                        <li class="homeworkItem">
+                            <a href="${item.data}" download="${item.filename}">${item.subject} - ${item.filename}</a>
+                        </li>
+                    `;
+                });
+            } else {
+                homeworkListHtml = '<li>No homework found for this class</li>';
+            }
+
+            document.getElementById('homeworkList').innerHTML = homeworkListHtml;
+        }
+    </script>
+</body>
+</html>

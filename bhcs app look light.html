@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BURDWAN HOLY CHILD SCHOOL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Light background */
+            color: #333; /* Dark text color */
+        }
+        h1 {
+            font-size: 30px;
+            color: #333;
+        }
+        header {
+            background-color: #fff; /* Light background */
+            color: #333;
+            padding: 5px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .school-logo {
+            position: relative;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+            height: auto;
+            border-radius: 50px;
+        }
+        nav {
+            background-color: #f8f8f8; /* Light background */
+            padding: 20px 0;
+            text-align: center;
+            display: none;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0 auto;
+            padding: 0;
+        }
+        li {
+            display: inline-block;
+            margin: 20px 10px;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 140px;
+            height: 140px;
+            background-color: #e0e0e0; /* Light background */
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #d4d4d4; /* Slightly darker on hover */
+            color: #000;
+        }
+        img {
+            width: 70px;
+            height: 70px;
+        }
+        .option-name {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+        }
+        .login-box {
+            background-color: #fff; /* Light background */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            color: #333;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 40px;
+            outline: none;
+            font-size: 16px;
+            background-color: #fff;
+            color: #333;
+        }
+        input[type="button"] {
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 35px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        input[type="button"]:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+        .internet-check {
+            display: none;
+            background-color: #f00;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .homework-container {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+        .homework-info {
+            background-color: #fff; /* Light background */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        .homework-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .homeworkList {
+            list-style-type: none;
+            padding: 0;
+        }
+        .homeworkItem {
+            margin-bottom: 10px;
+        }
+        .homeworkItem a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+        .homeworkItem a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="internet-check" id="internetCheck">Please connect your phone with the internet</div>
+    <header>
+        <img class="school-logo" src="school_logo.png" alt="School Logo">
+        <h1>Welcome to B.H.C.S</h1>
+        <p>This app is created by Trishanjit Malik & Gourav Srivastava</p>
+    </header>
+    <nav id="navigation">
+        <ul>
+            <li><a href="te_attendance.html" "student_attendance.html"><img src="attendance.png" alt="Attendance"> <span class="option-name">Attendance</span></a></li>
+            <li><a href="home work got.html" onclick="showHomework()"><img src="homework.png" alt="Homework"> <span class="option-name">Homework</span></a></li>
+            <li><a href="class work .html"><img src="classwork.png" alt="Class Work"> <span class="option-name">Class Work</span></a></li>
+            <li><a href="bus tracking .html"><img src="bustracking.png" alt="Bus Tracking"> <span class="option-name">Bus Tracking</span></a></li>
+            <li><a href="notice.html"><img src="notifications.png" alt="Notice"> <span class="option-name">Notice</span></a></li>
+            <li><a href="complain.html"><img src="complain.png" alt="Complain"> <span class="option-name">Complain</span></a></li>
+            <li><a href="onlineclasses.html"><img src="onlineclasses.png" alt="Online Classes"> <span class="option-name">Online Classes</span></a></li>
+            <li><a href="profile section .html"><img src="profile.png" alt="Profile"> <span class="option-name">Profile</span></a></li>
+            <li><a href="payingfees_link"><img src="payingfees.png" alt="Paying Fees"> <span class="option-name">Paying Fees</span></a></li>
+            <li><a href="marks_link"><img src="marks.png" alt="Marks"> <span class="option-name">Marks</span></a></li>
+            <li><a href="https://youtube.com/@burdwanholychildschool5600?si=2DsgBuMc_hHjySCx"><img src="youtube.png" alt="YouTube"> <span class="option-name">YouTube</span></a></li>
+          <li><a href="https://m.facebook.com/BwnHolyChildSchool/"><img src="facebook.png" alt="Facebook"> <span class="option-name">Facebook</span></a></li>
+          </ul>
+    </nav>
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h2>Login</h2>
+            <input type="text" id="regNumber" placeholder="Registration Number">
+            <input type="password" id="password" placeholder="Password">
+            <div id="loader" class="loader" style="display:none;"></div>
+            <input type="button" value="Login" onclick="login()">
+        </div>
+    </div>
+    <div class="profile-container" id="profileContainer" style="display: none;">
+        <div class="profile-info">
+            <h2 id="welcomeMessage">Hi there, welcome to Burdwan Holy Child School</h2>
+            <div class="profile-name" id="profileName"></div>
+        </div>
+        <hr align="8">
+    </div>
+</body>
+<script>
+      function login() {
+            var regNumber = document.getElementById("regNumber").value;
+            var password = document.getElementById("password").value;
+            var loader = document.getElementById("loader");
+            var welcomeMessage = document.getElementById("welcomeMessage");
+            var profileName = document.getElementById("profileName");
+            var profileContainer = document.getElementById("profileContainer");
+            var homeworkContainer = document.getElementById("homeworkContainer");
+            var profileLink = document.getElementById("profileLink");
+            var te_attendanceLink = document.getElementById("te_attendanceLink");
+            var student_attendanceLink = document.getElementById("student_attendanceLink");
+
+
+
+            switch (regNumber) {
+                case "1":
+                    if (password === "100") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Paromita Rout Yadav";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_paromita.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "2":
+                    if (password === "101") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Ashish Nandi";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_ashish.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "3":
+                    if (password === "103") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Soumen Kar";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_soumenkar.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "4":
+                    if (password === "104") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Priti Guin";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_priti.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "5":
+                    if (password === "105") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Avijit Mitra";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_avijit.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "6":
+                    if (password === "106") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Diwapinita Sarkar";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_diwapinita.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "7":
+                    if (password === "107") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Megha kumari";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_megha.html";
+                            te_attendanceLink.href = "te_attendance.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "8":
+                    if (password === "108") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Saiket Dey";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_saiket.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "9":
+                    if (password === "109") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Taraknath Chatterjee";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_taraknath.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "10":
+                    if (password === "110") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Pialy Aditya Dutta";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_pialy.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "11":
+                    if (password === "111") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+  }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break; 
+
+                case "12":
+                    if (password === "112") {
+                        loader.style.display = "block";
+                        setTimeout(function(){
+                            document.getElementById("loginContainer").style.display = "none";
+                            document.getElementById("navigation").style.display = "block";
+                            document.getElementById("homeworkContainer").style.display = "none";
+                            welcomeMessage.innerText = "Welcome";
+                            profileName.innerText = "Arghya Mishra";
+                            profileContainer.style.display = "block";
+                            profileLink.href = "profile_arghya.html";
+                            loader.style.display = "none";
+                        }, 1000);
+                    } else {
+                        alert("Invalid registration number or password");
+                    }
+                    break;
+default:
+                    alert("Invalid registration number or password");
+                }
+        }   
+</script>
+</html>

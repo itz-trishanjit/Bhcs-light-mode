@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School App</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        form, .complaint-list {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #complaintList .complaint-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        #complaintList .complaint-item p {
+            margin: 5px 0;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Complaint Form</h1>
+        <form id="complaintForm">
+            <label for="className">Class Name:</label>
+            <select id="className" required>
+                <option value="Class 1">Class 1</option>
+                <option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option>
+              <option value="Class 4">Class 4</option>
+              <option value="Class 5">Class 5</option>
+              <option value="Class 6">Class 6</option>
+              <option value="Class 7">Class 7</option>
+              <option value="Class 8">Class 8</option>
+              <option value="Class 9">Class 9</option>
+              <option value="Class 10">Class 10</option>
+              <option value="Class 11">Class 11</option>
+              <option value="Class 12">Class 12</option>
+              </select>
+            <label for="studentName">Student Name:</label>
+            <input type="text" id="studentName" required>
+            <label for="number">Registration Number:</label>
+            <input type="text" id="regNumber" required>
+            <label for="complaintDescription">Complaint:</label>
+            <textarea id="complaintDescription" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h1>Teacher Complaint Dashboard</h1>
+        <label for="teacherRegNumber">Teacher Registration Number:</label>
+        <input type="text" id="teacherRegNumber">
+        <button id="viewComplaints">View Complaints</button>
+        <div id="complaintList"></div>
+    </div>
+
+    <script>
+        // JavaScript code
+        document.getElementById('complaintForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const className = document.getElementById('className').value;
+            const studentName = document.getElementById('studentName').value;
+            const regNumber = document.getElementById('regNumber').value;
+            const complaintDescription = document.getElementById('complaintDescription').value;
+
+            const complaint = {
+                className,
+                studentName,
+                regNumber,
+                complaintDescription,
+                timestamp: new Date().toISOString(),
+            };
+
+            let complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+            complaints.push(complaint);
+            localStorage.setItem('complaints', JSON.stringify(complaints));
+
+            alert('Complaint submitted successfully!');
+            document.getElementById('complaintForm').reset();
+        });
+
+        document.getElementById('viewComplaints').addEventListener('click', function() {
+            const teacherRegNumber = document.getElementById('teacherRegNumber').value;
+            const authorizedRegNumbers = ['1', '2']; // Authorized registration numbers
+
+            if (!authorizedRegNumbers.includes(teacherRegNumber)) {
+                alert('You are not authorized to view the complaints.');
+                return;
+            }
+
+            let complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+            
+            const complaintList = document.getElementById('complaintList');
+            complaintList.innerHTML = '';
+
+            if (complaints.length === 0) {
+                complaintList.innerHTML = '<p>No complaints available.</p>';
+                return;
+            }
+
+            complaints.forEach(complaint => {
+                const complaintItem = document.createElement('div');
+                complaintItem.classList.add('complaint-item');
+                complaintItem.innerHTML = `
+                    <p><strong>Class:</strong> ${complaint.className}</p>
+                    <p><strong>Student Name:</strong> ${complaint.studentName}</p>
+                    <p><strong>Registration Number:</strong> ${complaint.regNumber}</p>
+                    <p><strong>Complaint:</strong> ${complaint.complaintDescription}</p>
+                    <p><strong>Submitted on:</strong> ${new Date(complaint.timestamp).toLocaleString()}</p>
+                    <hr>
+                `;
+                complaintList.appendChild(complaintItem);
+            });
+        });
+
+        // Check for Service Worker support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(function(error) {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+    </script>
+</body>
+</html>

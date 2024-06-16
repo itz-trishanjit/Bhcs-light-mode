@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Classes</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc, orange, purple);
+            color: #fff;
+        }
+
+        .container {
+            background-color: #fff;
+            color: #333;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            width: 70%;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-section, .links-section {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="number"], input[type="text"], select {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            word-wrap: break-word;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #noClassMessage {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Online Classes</h1>
+        <div id="inputSection" class="input-section">
+            <label for="regNo">Enter Registration Number:</label>
+            <input type="number" id="regNo" min="1">
+            <label for="subject">Enter Subject Name:</label>
+            <input type="text" id="subject" placeholder="Subject">
+            <label for="classLink">Enter Class Link (URL):</label>
+            <input type="text" id="classLink" placeholder="https://example.com or www.example.com" required>
+            <label for="classSelect">Select Class:</label>
+            <select id="classSelect">
+                <option value="1">Class 1</option>
+                <option value="2">Class 2</option>
+                <option value="3">Class 3</option>
+                <option value="4">Class 4</option>
+                <option value="5">Class 5</option>
+                <option value="6">Class 6</option>
+                <option value="7">Class 7</option>
+                <option value="8">Class 8</option>
+                <option value="9">Class 9</option>
+                <option value="10">Class 10</option>
+                <option value="11">Class 11</option>
+                <option value="12">Class 12</option>
+            </select>
+            <button onclick="submitLink()">Submit</button>
+        </div>
+        <div id="linksSection" class="links-section">
+            <h2>Class Links</h2>
+            <label for="filterClassSelect">Select Class to View Links:</label>
+            <select id="filterClassSelect">
+                <option value="1">Class 1</option>
+                <option value="2">Class 2</option>
+                <option value="3">Class 3</option>
+                <option value="4">Class 4</option>
+                <option value="5">Class 5</option>
+                <option value="6">Class 6</option>
+                <option value="7">Class 7</option>
+                <option value="8">Class 8</option>
+                <option value="9">Class 9</option>
+                <option value="10">Class 10</option>
+                <option value="11">Class 11</option>
+                <option value="12">Class 12</option>
+            </select>
+            <button onclick="filterLinks()">Find Online Class</button>
+            <ul id="linksList"></ul>
+            <div id="noClassMessage"></div>
+        </div>
+    </div>
+    <script>
+        const MAX_LINKS_PER_DAY = 35;
+        const LINK_VALIDITY_DAYS = 1;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            cleanExpiredLinks();
+        });
+
+        function submitLink() {
+            const regNo = document.getElementById('regNo').value;
+            let classLink = document.getElementById('classLink').value;
+            const subject = document.getElementById('subject').value;
+            const classSelect = document.getElementById('classSelect').value;
+            const today = new Date().toDateString();
+
+            if ((regNo == 1 || regNo == 2) && classLink && isValidURL(classLink) && subject) {
+                let linksData = getLinksData();
+                const dailyLinksCount = linksData.filter(link => link.date === today).length;
+
+                if (dailyLinksCount >= MAX_LINKS_PER_DAY) {
+                    alert('Maximum of 35 links can be uploaded per day.');
+                    return;
+                }
+
+                // Add protocol to URL if missing
+                if (classLink.startsWith('www.')) {
+                    classLink = 'https://' + classLink;
+                }
+
+                linksData.push({ classLink, subject, classSelect, date: today });
+                localStorage.setItem('linksData', JSON.stringify(linksData));
+
+                alert('Link submitted successfully.');
+
+                document.getElementById('regNo').value = '';
+                document.getElementById('classLink').value = '';
+                document.getElementById('subject').value = '';
+                document.getElementById('classSelect').value = '1';
+            } else {
+                alert('you are not able to uoload any link beacuse you are a studenr.');
+            }
+        }
+
+        function isValidURL(url) {
+            const pattern = /^(https:\/\/|http:\/\/|www\.)/;
+            return pattern.test(url);
+        }
+
+        function getLinksData() {
+            return JSON.parse(localStorage.getItem('linksData')) || [];
+        }
+
+        function cleanExpiredLinks() {
+            let linksData = getLinksData();
+            const now = new Date();
+            
+            linksData = linksData.filter(link => {
+                const linkDate = new Date(link.date);
+                return (now - linkDate) / (1000 * 60 * 60 * 24) <= LINK_VALIDITY_DAYS;
+            });
+
+            localStorage.setItem('linksData', JSON.stringify(linksData));
+        }
+
+        function filterLinks() {
+            const filterClass = document.getElementById('filterClassSelect').value;
+            const linksData = getLinksData();
+            const filteredLinks = linksData.filter(link => link.classSelect === filterClass);
+
+            const linksList = document.getElementById('linksList');
+            const noClassMessage = document.getElementById('noClassMessage');
+            linksList.innerHTML = '';
+
+            if (filteredLinks.length > 0) {
+                noClassMessage.textContent = '';
+                filteredLinks.forEach(link => appendLinkToList(link));
+            } else {
+                noClassMessage.textContent = 'No class today🥳🫠';
+            }
+        }
+
+        function appendLinkToList(link) {
+            const linksList = document.getElementById('linksList');
+            const listItem = document.createElement('li');
+            const linkElement = document.createElement('a');
+
+            linkElement.href = link.classLink;
+            linkElement.textContent = `${link.subject} (Uploaded on ${link.date})`;
+            linkElement.target = '_blank';
+            linkElement.rel = 'noopener noreferrer';
+
+            listItem.appendChild(linkElement);
+            linksList.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>

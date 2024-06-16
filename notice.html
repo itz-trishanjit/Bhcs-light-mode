@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="noticeForm">
+            <input type="text" id="regNo" placeholder="Enter your registration number">
+            <textarea id="noticeText" placeholder="Write your notice here"></textarea>
+            <button onclick="postNotice()">Post Notice</button>
+        </div>
+        <div id="noticeBoard"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#noticeForm {
+    margin-bottom: 20px;
+}
+
+#noticeForm input, #noticeForm textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+}
+
+#noticeForm button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    background: #5cb85c;
+    color: white;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+#noticeForm button:hover {
+    background: #4cae4c;
+}
+
+#noticeBoard .notice {
+    background: #f9f9f9;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+</style>
+<script>
+const authorizedRegNos = ['1', '2', ]; // Authorized registration numbers
+const maxNoticesPerDay = 30;
+const noticeExpiryDays = 30;
+
+let notices = JSON.parse(localStorage.getItem('notices')) || [];
+
+function postNotice() {
+    const regNo = document.getElementById('regNo').value;
+    const noticeText = document.getElementById('noticeText').value;
+
+    if (!authorizedRegNos.includes(regNo)) {
+        alert('You are not authorized to post notices.');
+        return;
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const todaysNotices = notices.filter(notice => notice.date === today);
+
+    if (todaysNotices.length >= maxNoticesPerDay) {
+        alert('Notice limit reached for today.');
+        return;
+    }
+
+    const notice = {
+        regNo: regNo,
+        text: noticeText,
+        date: today,
+        expiryDate: new Date(Date.now() + noticeExpiryDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    };
+
+    notices.push(notice);
+    localStorage.setItem('notices', JSON.stringify(notices));
+    displayNotices();
+}
+
+function displayNotices() {
+    const noticeBoard = document.getElementById('noticeBoard');
+    noticeBoard.innerHTML = '';
+
+    const now = new Date().toISOString().split('T')[0];
+    notices = notices.filter(notice => notice.expiryDate >= now);
+
+    notices.forEach(notice => {
+        const noticeElement = document.createElement('div');
+        noticeElement.className = 'notice';
+        noticeElement.innerText = `${notice.date} - ${notice.text}`;
+        noticeBoard.appendChild(noticeElement);
+    });
+
+    localStorage.setItem('notices', JSON.stringify(notices));
+}
+
+document.addEventListener('DOMContentLoaded', displayNotices);
+
+</script>
